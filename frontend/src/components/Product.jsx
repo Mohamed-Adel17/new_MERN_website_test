@@ -1,10 +1,14 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Rating from './Rating';
 import ErrorBoundary from './ErrorBoundary';
+import { addToCart } from '../slices/cartSlice';
 
 const Product = ({ product }) => {
+  const dispatch = useDispatch();
+
   // Add safety checks for product data
   if (!product || !product._id) {
     return (
@@ -13,6 +17,12 @@ const Product = ({ product }) => {
       </div>
     );
   }
+
+  const addToCartHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addToCart({ ...product, qty: 1 }));
+  };
 
   return (
     <ErrorBoundary>
@@ -96,25 +106,35 @@ const Product = ({ product }) => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex space-x-2">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.location.href = `/product/${product._id}`;
-                }}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center"
-              >
-                View Details
-              </button>
-              <button
-                className="p-2 text-gray-400 hover:text-red-500 transition-colors border border-gray-200 rounded-lg hover:border-red-200"
-                title="Add to Wishlist"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </button>
+            <div className="flex flex-col space-y-2">
+              <div className="flex space-x-2">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = `/product/${product._id}`;
+                  }}
+                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center"
+                >
+                  View Details
+                </button>
+                <button
+                  className="p-2 text-gray-400 hover:text-red-500 transition-colors border border-gray-200 rounded-lg hover:border-red-200"
+                  title="Add to Wishlist"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+              </div>
+              {product.countInStock > 0 && (
+                <button
+                  onClick={addToCartHandler}
+                  className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors text-center text-sm"
+                >
+                  🛒 Add to Cart
+                </button>
+              )}
             </div>
           </div>
         </Link>
