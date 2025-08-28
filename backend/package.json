@@ -10,6 +10,7 @@
     "server": "nodemon server.js",
     "build": "echo 'No build step needed for Node.js backend'",
     "prod": "node server.js",
+    "render-start": "node server.js",
     "data:import": "node seeder",
     "data:destroy": "node seeder -d"
   },
